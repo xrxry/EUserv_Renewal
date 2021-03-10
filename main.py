@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 USERNAME = os.environ["USERNAME"]
 PASSWORD = os.environ["PASSWORD"]
-TOKEN = os.environ.get("TOKEN", "")
+#TOKEN = os.environ.get("TOKEN", "")
 TG_BOT_TOKEN = os.environ("TG_BOT_TOKEN")
 TG_USER_ID = os.environ("TG_USER_ID")
 PROXIES = {
