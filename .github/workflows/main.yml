@@ -1,0 +1,38 @@
+name: 'EUserv自动续期'
+
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: '0 18 * * 0,3'
+
+jobs:
+  auto_renew:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout codes'
+        uses: actions/checkout@v2
+
+      - name: 'Set python'
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+
+      - name: 'Install dependencies'
+        run: |
+          python -m pip install --upgrade requests
+          python -m pip install --upgrade beautifulsoup4
+      - name: 'Auto_renew'
+        env:
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_USER_ID: ${{ secrets.TG_USER_ID }}
+        run: python main.py
+
+      - name: Delete Workflow Runs
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 1
+          keep_minimum_runs: 0
