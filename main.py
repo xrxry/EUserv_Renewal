@@ -7,6 +7,8 @@ from bs4 import BeautifulSoup
 USERNAME = os.environ["USERNAME"]
 PASSWORD = os.environ["PASSWORD"]
 TOKEN = os.environ.get("TOKEN", "")
+TG_BOT_TOKEN = os.environ("TG_BOT_TOKEN")
+TG_USER_ID = os.environ("TG_USER_ID")
 PROXIES = {
     "http": "http://127.0.0.1:10809",
     "https": "http://127.0.0.1:10809"
@@ -110,10 +112,16 @@ def check(sess_id: str, session: requests.session):
         print("ALL Work Done! Enjoy")
 
 
-def notify_user(token: str, msg: str):
-    rs = requests.post(url="https://sre24.com/api/v1/push", json=dict(token=token, msg=msg)).json()
-    assert int(rs["code"] / 100) == 2, rs
+#def notify_user(token: str, msg: str):
+#    rs = requests.post(url="https://sre24.com/api/v1/push", json=dict(token=token, msg=msg)).json()
+#    assert int(rs["code"] / 100) == 2, rs
 
+def notify_user(text: str):
+    if not TG_BOT_TOKEN or not TG_USER_ID:
+        exit(0)
+    rs = requests.post(url="https://api.telegram.org/bot%s/sendMessage" % TG_BOT_TOKEN, json=dict(chat_id=TG_USER_ID, text=text)).json()
+    assert rs["ok"], rs
+    
 
 if __name__ == "__main__":
     if not USERNAME or not PASSWORD:
